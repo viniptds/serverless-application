@@ -1,0 +1,55 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: waygex
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: serverless-liquid
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: serverless-liquid
+
+provider:
+  name: aws
+  runtime: python3.12
+  region: us-east-1
+  stage: dev
+  timeout: 30
+  memorySize: 256
+  logs:
+    httpApi: true
+  environment:
+    STAGE: ${sls:stage}
+    USERS_TABLE: users
+    DYNAMODB_ENDPOINT: ${env:DYNAMODB_ENDPOINT, ''}
+  # Uncomment to easily set up a custom domain. Read the docs for more details:
+  # https://www.serverless.com/framework/docs/providers/aws/guide/domains
+  # domain: api.example.com
+  httpApi:
+    cors: 
+      allowCredentials: true
+      allowedOrigins:
+        - 'http://localhost:3000'
+      allowedHeaders:
+        - 'Content-Type'
+        - 'Authorization'
+      allowedMethods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - OPTIONS
+  
+
+functions:
+  api:
+    handler: handler.handler
+    events:
+      - httpApi: 
+          path: /{proxy+}
+          method: ANY
+          # path: /{proxy+}
+          # method: ANY
+      #     cors: true
+      #     https: false
+      # - httpApi: '*'
+
+plugins:
+  # - serverless-python-requirements
+  - serverless-offline
