@@ -5,6 +5,18 @@ import { useParams, useRouter } from 'next/navigation';
 import { useStockService } from "@/hooks/useStockService";
 import { Metadata } from "next";
 
+interface StockDayData {
+    "1. open": string;
+    "2. high": string;
+    "3. low": string;
+    "4. close": string;
+    "5. volume": string;
+}
+
+interface StockValues {
+    [date: string]: StockDayData;
+}
+
 // export const metadata: Metadata = {
 //   title: 'Stock Info',
 // };
@@ -13,14 +25,15 @@ export default function StockInfo() {
     const { id: stockId } = useParams();
     const router = useRouter();
     const [loading, setLoading] = useState(true);
-    const [stockData, setStockData] = useState({});
+    const [stockData, setStockData] = useState<unknown>({});
     const stockService = useStockService();
 
-    const [stockValues, setStockValues] = useState([]);
+    const [stockValues, setStockValues] = useState<StockValues>({});
 
     const fetchStockData = async () => {
+        if (!stockId) return;
         setLoading(true);
-        const response = await stockService.get(stockId);
+        const response = await stockService.get("" + stockId);
         // const data = await response.json();
         setStockValues(response['Time Series (Daily)']);
         setLoading(false);
@@ -67,7 +80,7 @@ export default function StockInfo() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {Object.keys(stockValues).map((date) => (
+                                    {Object.keys(stockValues).map((date: string) => (
                                         <tr key={date}>
                                             <td className="px-4 py-2">{date}</td>
                                             <td className="px-4 py-2">{stockValues[date]['1. open']}</td>

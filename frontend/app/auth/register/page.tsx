@@ -41,11 +41,7 @@ export default function RegisterPage() {
         try {
             setLoading(true);
             // TODO: prepare backend to handle registration
-            const response = await userService.createItem(formData);
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Registration failed');
-            }
+            await userService.createItem(formData);
 
             // Registration successful - redirect to login
             router.push('/login?registered=true');

@@ -5,7 +5,19 @@ import { useRouter } from 'next/navigation';
 import { Metadata } from 'next';
 import { useStockService } from '@/hooks/useStockService';
 
-const mockItems = [
+interface StockItem {
+    "1. symbol": string;
+    "2. name": string;
+    "3. type": string;
+    "4. region": string;
+    "5. marketOpen": string;
+    "6. marketClose": string;
+    "7. timezone": string;
+    "8. currency": string;
+    "9. matchScore": string;
+}
+
+const mockItems: StockItem[] = [
     {
         "1. symbol": "NVDA",
         "2. name": "NVIDIA Corp",
@@ -46,29 +58,28 @@ const mockItems = [
 // };
 
 export default function Stocks() {
-    const [items, setItems] = useState(mockItems);
+    const [items, setItems] = useState<StockItem[]>(mockItems);
     const [searchQuery, setSearchQuery] = useState('NVDA');
     // const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingItem, setEditingItem] = useState(null);
+    const [editingItem, setEditingItem] = useState<StockItem | null>(null);
     const [formData, setFormData] = useState({ title: '', body: '' });
     const router = useRouter();
     const stockService = useStockService();
 
     const updateStockSearch = async () => {
         if (searchQuery.length >= 3) {
-            // alert(searchQuery);
             setLoading(true);
-            setError(null);
+            setError('');
             try {
                 console.log('Searching for term: [' + searchQuery + ']');
                 const data = await stockService.list(searchQuery);
                 console.log(data);
                 setItems(data.bestMatches);
             } catch (err) {
-                setError('Failed to load items');
+                setError("Failed to load items");
             } finally {
                 setLoading(false);
             }
@@ -81,7 +92,7 @@ export default function Stocks() {
         }, 1000));
     }, [searchQuery]);
 
-    const handleViewStockPrice = (ticket) => {
+    const handleViewStockPrice = (ticket: string) => {
         router.push('/stocks/' + ticket);
     }
 
@@ -101,7 +112,7 @@ export default function Stocks() {
                         </button> */}
                     </div>
 
-                    {error && (
+                    {error.length && (
                         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                             {error}
                         </div>
@@ -202,7 +213,6 @@ export default function Stocks() {
                                     type='email'
                                     value={formData.body}
                                     onChange={(e) => setFormData({ ...formData, body: e.target.value })}
-                                    rows={4}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                                     placeholder="Enter description"
                                 />

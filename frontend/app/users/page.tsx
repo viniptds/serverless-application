@@ -3,12 +3,18 @@ import React, { useState, useEffect } from 'react';
 import { Trash2, Edit2, Plus, X, Save } from 'lucide-react';
 import { useUserService } from '@/hooks/useUserService';
 
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
 export default function Users() {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState(null);
+  const [editingItem, setEditingItem] = useState<User | null>(null);
   const [formData, setFormData] = useState({ name: '', email: '' });
   const userService = useUserService();
 
@@ -18,7 +24,7 @@ export default function Users() {
 
   const loadItems = async () => {
     setLoading(true);
-    setError(null);
+    setError('');
     try {
       const data = await userService.getItems();
       setItems(data.users);
@@ -35,7 +41,7 @@ export default function Users() {
     setIsModalOpen(true);
   };
 
-  const handleEdit = (item) => {
+  const handleEdit = (item: User) => {
     setEditingItem(item);
     setFormData({ name: item.name, email: item.email });
     setIsModalOpen(true);
@@ -48,12 +54,12 @@ export default function Users() {
     }
 
     setLoading(true);
-    setError(null);
+    setError('');
 
     try {
       if (editingItem) {
         const updated = await userService.updateItem(editingItem.id, formData);
-        setItems(items.map(item => item.id === editingItem.id ? { ...item, ...formData } : item));
+        setItems(items.map((item) => item.id === editingItem.id ? { ...item, ...formData } : item));
       } else {
         const newItem = await userService.createItem(formData);
         setItems([newItem, ...items]);
@@ -67,11 +73,11 @@ export default function Users() {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
 
     setLoading(true);
-    setError(null);
+    setError('');
     try {
       await userService.deleteItem(id);
       setItems(items.filter(item => item.id !== id));
@@ -98,7 +104,7 @@ export default function Users() {
             </button>
           </div>
 
-          {error && (
+          {error.length > 0 && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
               {error}
             </div>
@@ -190,9 +196,8 @@ export default function Users() {
                   type='email'
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  rows={4}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  placeholder="Enter description"
+                  placeholder="Enter email"
                 />
               </div>
 
