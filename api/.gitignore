@@ -1,5 +1,6 @@
 # Distribution / packaging
 .Python
+.python-version
 env/
 build/
 develop-eggs/
@@ -15,6 +16,8 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+cert.pem
+key.pem
 
 # Serverless directories
 .serverless

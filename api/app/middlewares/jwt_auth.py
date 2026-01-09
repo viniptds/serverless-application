@@ -17,6 +17,10 @@ PUBLIC_PATHS = {
 class JWTAuthMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next):
+        if request.method == "OPTIONS":
+            return await call_next(request)
+        
+        
         path = request.url.path
         # return await call_next(request)
         

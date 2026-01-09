@@ -15,17 +15,36 @@ provider:
   logs:
     httpApi: true
   environment:
+    JWT_SECRET: ${env:JWT_SECRET}
+    POWERTOOLS_DEV: ${env:POWERTOOLS_DEV}
+    ALPHA_API_KEY: ${env:ALPHA_API_KEY}
+    ALPHA_API_URL: ${env:ALPHA_API_URL}
     STAGE: ${sls:stage}
     USERS_TABLE: users
-    DYNAMODB_ENDPOINT: ${env:DYNAMODB_ENDPOINT, ''}
   # Uncomment to easily set up a custom domain. Read the docs for more details:
   # https://www.serverless.com/framework/docs/providers/aws/guide/domains
   # domain: api.example.com
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:DescribeTable
+          Resource:
+            - arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:provider.environment.USERS_TABLE}
   httpApi:
     cors: 
       allowCredentials: true
       allowedOrigins:
         - 'http://localhost:3000'
+        - ${env:FRONTEND_URL}
+        - 'https://serverless-application-two.vercel.app'
       allowedHeaders:
         - 'Content-Type'
         - 'Authorization'
@@ -42,7 +61,8 @@ functions:
     handler: handler.handler
     events:
       - httpApi: 
-          path: /{proxy+}
+      - httpApi:
+          path: /v1/{proxy+}
           method: ANY
           # path: /{proxy+}
           # method: ANY
@@ -50,6 +70,27 @@ functions:
       #     https: false
       # - httpApi: '*'
 
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${env:USERS_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+
 plugins:
-  # - serverless-python-requirements
+  - serverless-python-requirements
   - serverless-offline
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
+    slim: false
+    useDownloadCache: false
+    useStaticCache: false

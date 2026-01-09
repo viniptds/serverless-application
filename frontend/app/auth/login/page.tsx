@@ -109,7 +109,7 @@ export default function LoginPage() {
             <a href="#" className="text-blue-600 hover:text-blue-500">
               Forgot password?
             </a>
-            <a href="/register" className="text-blue-600 hover:text-blue-500">
+            <a href="/auth/register" className="text-blue-600 hover:text-blue-500">
               Create account
             </a>
           </div>

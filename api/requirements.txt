@@ -2,12 +2,10 @@ fastapi
 mangum
 aws-lambda-powertools
 pydantic[email]
+email-validator
 boto3
 requests
 python-dotenv
 passlib[bcrypt]
 PyJWT
 bcrypt==4.3.0
-pytest
-httpx 
-pytest-cov

@@ -59,8 +59,8 @@ const mockItems: StockItem[] = [
 
 export default function Stocks() {
     const [items, setItems] = useState<StockItem[]>(mockItems);
-    const [searchQuery, setSearchQuery] = useState('NVDA');
-    // const [searchQuery, setSearchQuery] = useState('');
+    // const [searchQuery, setSearchQuery] = useState('NVDA');
+    const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -112,7 +112,7 @@ export default function Stocks() {
                         </button> */}
                     </div>
 
-                    {error.length && (
+                    {error.length > 0 && (
                         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                             {error}
                         </div>
@@ -124,10 +124,13 @@ export default function Stocks() {
                             <p className="mt-4 text-gray-600">Loading...</p>
                         </div>
                     ) : (
+
+                        // TODO: create top stocks button and route
+
                         <div className="space-y-4">
                             <div className="flex items-center gap-2 w-full">
                                 <input type='text' placeholder='Type to search a symbol' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="p-2 border border-gray-300 rounded-lg flex-1" />
-                                <button type='button' onClick={updateStockSearch}>Search</button>
+                                <button type='button' className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition" onClick={updateStockSearch}>Search</button>
                             </div>
 
                             {items.length === 0 && searchQuery && (
@@ -151,7 +154,7 @@ export default function Stocks() {
                                         </div>
                                         <div className="flex gap-2 ml-4 content-center">
 
-                                            <button type='button' onClick={() => handleViewStockPrice(item['1. symbol'])} className='bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition'>View Stock Price</button>
+                                            <button type='button' onClick={() => handleViewStockPrice(item['1. symbol'])} className='bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition'>View Stock Price</button>
                                             {/* <button
                                                 onClick={() => handleEdit(item)}
                                                 className="p-2 text-blue-600 hover:bg-blue-50 rounded transition"

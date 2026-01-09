@@ -1,19 +1,14 @@
 import uuid
-import boto3
-import os
 
 from app.core.jwt import hash_password
 from app.models.user import UserCreate, UserResponse, UserListResponse
+from app.core.db import get_dynamodb, get_users_table
 from aws_lambda_powertools import Logger
 
 logger = Logger()
 
-dynamodb = boto3.resource(
-    "dynamodb",
-    region_name="us-east-1",
-    endpoint_url=os.getenv("DYNAMODB_ENDPOINT", "http://localhost:8000")
-)
-table = dynamodb.Table("users")
+dynamodb = get_dynamodb()
+table = get_users_table()
 
 res = table.attribute_definitions
 print(f"Sua tabela espera estas chaves: {res}")
