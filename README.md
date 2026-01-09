@@ -4,13 +4,31 @@ This is a full-stack application to list stocks from a third-party API and manag
 
 The frontend was built using Next.js, ContextAPI and backend with FastAPI and JWT authentication served by the Serverless Framework.
 
+## Endpoints
+
+### Backend
+
+Open /docs on browser to see Swagger documentation
+
+### Frontend
+
+* /auth/login
+
+* /auth/register (TO BE DONE)
+
+* /stocks
+
+* /stocks/(stock-label)
+
+* users (TO BE DONE)
+
 ## Demo
 
-* Frontend: 
+* Frontend: https://serverless-application-two.vercel.app/auth/login
 User: user@example.com
 Password: 123456
 
-* Backend: a
+* Backend: https://zv9k6r0ks5.execute-api.us-east-1.amazonaws.com
 
 ## Architecture
 
