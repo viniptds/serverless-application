@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/providers/AuthProvider';
 import { useRouter } from 'next/navigation';
 
@@ -11,25 +11,25 @@ export default function LoginPage() {
   // const [password, setPassword] = useState('12345');
 
   const [error, setError] = useState('');
-  const { login, loading, user } = useAuth();
+  const { login, loading, isAuthenticated } = useAuth();
   const router = useRouter();
+  
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace('/');
+      return;
+    }
+  }, [isAuthenticated, loading]);
 
-  if (loading) {
-    return;
-  }
-
-  if (user) {
-    router.push('/');
-    return;
-  }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    
+
     try {
       await login(email, password);
+
+      location.href = '/';
       
-      router.push('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
     }
