@@ -28,12 +28,12 @@ export default function Home() {
 
   return (
     <div className="text-center justify-center p-10">
-      <h1 className="text-center">Menu</h1>
+      <h1 className="text-center my-6">Menu</h1>
 
-      <div className=" justify-center items-center h-screen">
-        <a href="users" className="p-6 m-10 rounded content-center bg-green-300">Users</a>
-        <a href="stocks" className="p-6 m-10 rounded content-center bg-green-300">Stock Report</a>
-        <button onClick={handleLogout} className="p-6 m-10 rounded content-center bg-green-300">Logout</button>
+      <div className=" justify-center items-center flex gap-6">
+        <a href="users" className="p-6 rounded content-center bg-green-300">Users</a>
+        <a href="stocks" className="p-6 rounded content-center bg-green-300">Stock Report</a>
+        <button onClick={handleLogout} className="p-6 rounded content-center bg-green-300">Logout</button>
       </div>
     </div>
   );
